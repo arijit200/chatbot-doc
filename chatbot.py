@@ -24,7 +24,7 @@ corpus = article.text
 text = corpus
 sentence_list = nltk.sent_tokenize(text)
 
-print(sentence_list)
+# print(sentence_list)
 
 # a function to return a random greeting respone to a user's greeting
 def greeting_response(text):
