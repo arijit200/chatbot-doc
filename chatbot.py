@@ -39,6 +39,7 @@ def greeting_response(text):
     if word in user_greetings:
       return random.choice(bot_greetings)
 
+# sorts the indices according to the descending order (bubble sort)
 def index_sort(list_var):
   length = len(list_var)
   list_index = list(range(0, length))
@@ -57,17 +58,18 @@ def index_sort(list_var):
 def bot_response(user_input):
   user_input = user_input.lower()
   sentence_list.append(user_input)
+  # usr input appended at the last
   bot_response = ''
-  cm = CountVectorizer().fit_transform(sentence_list)
-  similarity_scores = cosine_similarity(cm[-1], cm)
-  similarity_scores_list = similarity_scores.flatten()
-  index = index_sort(similarity_scores_list)
-  index = index[1:]
+  cm = CountVectorizer().fit_transform(sentence_list)   # converts the sentence_list into a matrix of frequency of words per document
+  similarity_scores = cosine_similarity(cm[-1], cm)   # creates a similarity_scores list containing the similarity of the user_input and the whole siilarity_score matrix with each other
+  similarity_scores_list = similarity_scores.flatten()    # converts the 2D matrix into 1D
+  index = index_sort(similarity_scores_list)    # sorts the indices according to the value present int the similarity_scores_list
+  index = index[1:]   # the first value is neglected as it is the cosine_similarity of the usr_input with itself and has the highest value, otherwise the bot will reply whatever the us typos
   response_flag = 0
 
-  j = 0
+  j = 0   # flag used to give only the first 2 matching sentences
   for i in range(len(index)):
-    if similarity_scores_list[index[i]] > 0.0:
+    if similarity_scores_list[index[i]] > 0.0: # similarity scores should be > 0.0 as cos value = 0.0 indicates 180 deg
       bot_response = bot_response+' '+sentence_list[index[i]]
       response_flag = 1
       j += 1
